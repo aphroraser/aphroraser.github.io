@@ -143,6 +143,17 @@
       margin-top: 0.5rem;
       opacity: 0.8;
     }
+    .weather-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0f172a;
+      background: linear-gradient(135deg, #ede9fe 0%, #f3e8ff 100%);
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      display: inline-block;
+      margin-top: 0.2rem;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+    }
     .threshold-section {
       background: rgba(255,255,255,0.75);
       backdrop-filter: blur(18px);
@@ -229,11 +240,6 @@
       display: inline-block;
       width: fit-content;
     }
-    .weather-text {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
     .modal {
       display: none;
       position: fixed;
@@ -251,10 +257,10 @@
     .modal-content {
       background: white;
       border-radius: 2rem;
-      padding: 2rem;
-      width: 90%;
-      max-width: 700px;
-      max-height: 85vh;
+      padding: 1.5rem;
+      width: 95%;
+      max-width: 800px;
+      max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 30px 50px rgba(0,0,0,0.2);
     }
@@ -262,11 +268,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     .modal-header h3 {
       font-weight: 650;
       color: #1e293b;
+      font-size: 1.1rem;
     }
     .close-btn {
       font-size: 1.8rem;
@@ -274,10 +281,45 @@
       color: #64748b;
       line-height: 1;
       transition: color 0.2s;
+      padding: 0.5rem;
     }
     .close-btn:hover {
       color: #0f172a;
     }
+
+    /* 时间范围按钮组 */
+    .time-range-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .time-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      border: 1px solid #e2e8f0;
+      background: white;
+      color: #64748b;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 60px;
+      text-align: center;
+    }
+    .time-btn:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    .time-btn.active {
+      background: #8b5cf6;
+      color: white;
+      border-color: #8b5cf6;
+      font-weight: 600;
+    }
+
     #historyChart {
       width: 100%;
       height: 350px;
@@ -288,6 +330,68 @@
       color: #94a3b8;
       margin-top: 0.5rem;
     }
+
+    /* 天气历史列表样式 */
+    .weather-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+    }
+    .weather-timeline-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.7rem 0.8rem;
+      background: #f8fafc;
+      border-radius: 1rem;
+      border-left: 4px solid #8b5cf6;
+      transition: all 0.2s;
+    }
+    .weather-timeline-item:hover {
+      background: #ede9fe;
+    }
+    .weather-time {
+      font-size: 0.8rem;
+      color: #64748b;
+      min-width: 70px;
+      font-weight: 500;
+    }
+    .weather-text-display {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1e293b;
+      flex: 1;
+    }
+    .weather-original {
+      font-size: 0.7rem;
+      color: #94a3b8;
+    }
+    .weather-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+    .weather-stat-card {
+      background: linear-gradient(135deg, #ede9fe 0%, #f3e8ff 100%);
+      border-radius: 0.8rem;
+      padding: 0.6rem;
+      text-align: center;
+    }
+    .weather-stat-count {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #5b21b6;
+    }
+    .weather-stat-label {
+      font-size: 0.7rem;
+      color: #7c3aed;
+      margin-top: 0.1rem;
+    }
+
     @media (max-width: 600px) {
       body { padding: 0.6rem; }
       .header-card { 
@@ -296,18 +400,31 @@
         padding: 1rem 1.5rem;
       }
       .prop-value { font-size: 1.7rem; }
+      .weather-value { font-size: 1.5rem; }
       .threshold-grid {
         grid-template-columns: 1fr 1fr;
       }
       .modal-content {
-        padding: 1.5rem;
+        padding: 1rem;
+        border-radius: 1.5rem;
+        width: 100%;
+        max-height: 95vh;
+      }
+      .weather-timeline-item {
+        flex-wrap: wrap;
+      }
+      .time-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+      }
+      #historyChart {
+        height: 280px;
       }
     }
   </style>
 </head>
 <body>
   <div class="dashboard">
-    <!-- 头部 -->
     <div class="header-card">
       <div class="device-title">
         <i class="fas fa-microchip"></i>
@@ -322,7 +439,6 @@
       </div>
     </div>
 
-    <!-- 属性卡片 -->
     <div class="grid-cards">
       <div class="prop-card" data-identifier="CurrentTemperature" data-name="温度" data-unit="℃" data-color="#f97316" data-type="number">
         <div class="icon-circle" style="background: #fff2e5; color: #f97316;"><i class="fas fa-temperature-high"></i></div>
@@ -345,12 +461,11 @@
       <div class="prop-card" data-identifier="WeatherCondition" data-name="天气" data-unit="" data-color="#8b5cf6" data-type="string">
         <div class="icon-circle" style="background: #ede9fe; color: #8b5cf6;"><i class="fas fa-cloud-sun"></i></div>
         <span class="prop-name">天气状况</span>
-        <div><span id="val_WeatherCondition" class="weather-text">--</span></div>
+        <div><span id="val_WeatherCondition" class="weather-value">--</span></div>
         <span class="hint-text">点击查看历史</span>
       </div>
     </div>
 
-    <!-- 阈值修改区域 -->
     <div class="threshold-section">
       <h3><i class="fas fa-sliders-h" style="margin-right: 0.5rem; color: #6366f1;"></i>上下限设置</h3>
       <div class="threshold-grid">
@@ -392,14 +507,21 @@
     <p class="refresh-hint">数据每15秒自动刷新 · 点击卡片查看历史数据</p>
   </div>
 
-  <!-- 历史数据模态框 -->
   <div id="historyModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="modalTitle">历史数据</h3>
         <span class="close-btn" id="closeModalBtn">&times;</span>
       </div>
+      <div class="time-range-buttons" id="timeRangeButtons">
+        <button class="time-btn" data-hours="1">1小时</button>
+        <button class="time-btn" data-hours="3">3小时</button>
+        <button class="time-btn" data-hours="6">6小时</button>
+        <button class="time-btn active" data-hours="12">12小时</button>
+        <button class="time-btn" data-hours="24">24小时</button>
+      </div>
       <div id="historyChart"></div>
+      <div id="weatherTimeline" class="weather-timeline" style="display:none;"></div>
     </div>
   </div>
 
@@ -417,24 +539,63 @@
       };
 
       const weatherMap = {
-        "0": "晴", "1": "晴", "2": "晴", "3": "晴",
-        "4": "多云", "5": "晴间多云", "6": "晴间多云",
-        "7": "大部多云", "8": "大部多云", "9": "阴",
-        "10": "阵雨", "11": "雷阵雨", "12": "雷阵雨伴有冰雹",
-        "13": "小雨", "14": "中雨", "15": "大雨", "16": "暴雨",
-        "17": "大暴雨", "18": "特大暴雨", "19": "冻雨",
-        "20": "雨夹雪", "21": "阵雪", "22": "小雪", "23": "中雪",
-        "24": "大雪", "25": "暴雪", "26": "浮尘", "27": "扬沙",
-        "28": "沙尘暴", "29": "强沙尘暴", "30": "雾", "31": "霾",
-        "32": "风", "33": "大风", "34": "飓风", "35": "热带风暴",
-        "36": "龙卷风", "37": "冷", "38": "热", "99": "未知"
+        "0": "☀️ 晴", "1": "🌙 晴", "2": "☀️ 晴", "3": "🌙 晴",
+        "4": "☁️ 多云", "5": "⛅ 晴间多云", "6": "⛅ 晴间多云",
+        "7": "☁️ 大部多云", "8": "☁️ 大部多云", "9": "☁️ 阴",
+        "10": "🌧️ 阵雨", "11": "⛈️ 雷阵雨", "12": "🧊 雷阵雨伴有冰雹",
+        "13": "🌧️ 小雨", "14": "🌧️ 中雨", "15": "🌧️ 大雨", "16": "🌧️ 暴雨",
+        "17": "🌧️ 大暴雨", "18": "🌧️ 特大暴雨", "19": "🧊 冻雨",
+        "20": "🌨️ 雨夹雪", "21": "🌨️ 阵雪", "22": "🌨️ 小雪", "23": "🌨️ 中雪",
+        "24": "❄️ 大雪", "25": "❄️ 暴雪", "26": "🌫️ 浮尘", "27": "🌫️ 扬沙",
+        "28": "🌫️ 沙尘暴", "29": "🌫️ 强沙尘暴", "30": "🌫️ 雾", "31": "🌫️ 霾",
+        "32": "💨 风", "33": "💨 大风", "34": "🌀 飓风", "35": "🌀 热带风暴",
+        "36": "🌪️ 龙卷风", "37": "🥶 冷", "38": "🥵 热", "99": "❓ 未知",
+        "sunny": "☀️ 晴", "clear": "🌙 晴", "fair": "☀️ 晴",
+        "cloudy": "☁️ 多云", "partly cloudy": "⛅ 晴间多云",
+        "mostly cloudy": "☁️ 大部多云", "overcast": "☁️ 阴",
+        "shower": "🌧️ 阵雨", "thundershower": "⛈️ 雷阵雨",
+        "thundershower with hail": "🧊 雷阵雨伴有冰雹",
+        "light rain": "🌧️ 小雨", "moderate rain": "🌧️ 中雨",
+        "heavy rain": "🌧️ 大雨", "storm": "🌧️ 暴雨",
+        "heavy storm": "🌧️ 大暴雨", "severe storm": "🌧️ 特大暴雨",
+        "ice rain": "🧊 冻雨", "sleet": "🌨️ 雨夹雪",
+        "snow flurry": "🌨️ 阵雪", "light snow": "🌨️ 小雪",
+        "moderate snow": "🌨️ 中雪", "heavy snow": "❄️ 大雪",
+        "snowstorm": "❄️ 暴雪", "dust": "🌫️ 浮尘", "sand": "🌫️ 扬沙",
+        "duststorm": "🌫️ 沙尘暴", "sandstorm": "🌫️ 强沙尘暴",
+        "foggy": "🌫️ 雾", "haze": "🌫️ 霾", "windy": "💨 风",
+        "blustery": "💨 大风", "hurricane": "🌀 飓风",
+        "tropical storm": "🌀 热带风暴", "tornado": "🌪️ 龙卷风",
+        "cold": "🥶 冷", "hot": "🥵 热", "unknown": "❓ 未知"
       };
 
       let chartInstance = null;
+      let currentHours = 12;
+      let currentIdentifier = null;
+      let currentName = null;
+      let currentUnit = null;
+      let currentColor = null;
+      let currentDataType = null;
 
       function formatWeather(code) {
-        if (code === undefined || code === null || code === "") return "--";
-        return weatherMap[String(code).trim()] || String(code);
+        if (code === undefined || code === null || code === "") return "❓ --";
+        const key = String(code).trim();
+        if (weatherMap[key]) return weatherMap[key];
+        if (weatherMap[key.toLowerCase()]) return weatherMap[key.toLowerCase()];
+        return key;
+      }
+
+      function sampleData(list, maxPoints = 48) {
+        if (list.length <= maxPoints) return list;
+        const step = Math.ceil(list.length / maxPoints);
+        const sampled = [];
+        for (let i = 0; i < list.length; i += step) {
+          sampled.push(list[i]);
+        }
+        if (sampled[sampled.length - 1] !== list[list.length - 1]) {
+          sampled.push(list[list.length - 1]);
+        }
+        return sampled;
       }
 
       async function fetchDeviceStatus() {
@@ -546,22 +707,44 @@
         }
       }
 
-      async function loadHistory(identifier, name, unit, color, dataType) {
+      async function loadHistory(identifier, name, unit, color, dataType, hours) {
+        currentIdentifier = identifier;
+        currentName = name;
+        currentUnit = unit;
+        currentColor = color;
+        currentDataType = dataType;
+        currentHours = hours || currentHours;
+
         const modal = document.getElementById('historyModal');
         modal.classList.add('active');
         document.getElementById('modalTitle').textContent = `${name} - 历史数据`;
 
-        if (!chartInstance) {
-          chartInstance = echarts.init(document.getElementById('historyChart'));
+        // 更新时间按钮状态
+        document.querySelectorAll('.time-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (parseInt(btn.dataset.hours) === currentHours) {
+            btn.classList.add('active');
+          }
+        });
+
+        const chartDiv = document.getElementById('historyChart');
+        const weatherDiv = document.getElementById('weatherTimeline');
+        
+        chartDiv.style.display = 'none';
+        weatherDiv.style.display = 'none';
+        
+        if (chartInstance) {
+          chartInstance.dispose();
+          chartInstance = null;
         }
-        chartInstance.showLoading();
 
         try {
           const now = new Date();
           const endTime = now.getTime();
-          const startTime = endTime - (24 * 60 * 60 * 1000);
+          const startTime = endTime - (currentHours * 60 * 60 * 1000);
           
-          const url = `${API.HISTORY}?product_id=${PRODUCT_ID}&device_name=${DEVICE_NAME}&identifier=${identifier}&start_time=${startTime}&end_time=${endTime}&limit=288`;
+          const limit = currentHours <= 6 ? 144 : 288;
+          const url = `${API.HISTORY}?product_id=${PRODUCT_ID}&device_name=${DEVICE_NAME}&identifier=${identifier}&start_time=${startTime}&end_time=${endTime}&limit=${limit}`;
           
           const res = await fetch(url, { 
             headers: { "authorization": TOKEN },
@@ -571,24 +754,11 @@
           
           if (data.code !== 0) {
             alert(`获取历史数据失败: ${data.msg || '未知错误'}`);
-            chartInstance.hideLoading();
             return;
           }
           
           if (!data.data || !data.data.list || data.data.list.length === 0) {
-            const option = {
-              title: {
-                text: '暂无数据',
-                left: 'center',
-                top: 'center',
-                textStyle: { color: '#94a3b8', fontSize: 14 }
-              },
-              xAxis: { show: false },
-              yAxis: { show: false },
-              series: []
-            };
-            chartInstance.setOption(option, true);
-            chartInstance.hideLoading();
+            alert('暂无历史数据');
             return;
           }
 
@@ -597,147 +767,129 @@
           const isWeatherString = (dataType === 'string' || identifier === 'WeatherCondition');
           
           if (isWeatherString) {
-            const times = list.map(item => {
+            weatherDiv.style.display = 'flex';
+            weatherDiv.innerHTML = '';
+            
+            const weatherStats = {};
+            list.forEach(item => {
+              const w = formatWeather(item.value);
+              weatherStats[w] = (weatherStats[w] || 0) + 1;
+            });
+            
+            const sortedStats = Object.entries(weatherStats).sort((a, b) => b[1] - a[1]);
+            
+            const statsDiv = document.createElement('div');
+            statsDiv.className = 'weather-stats';
+            statsDiv.innerHTML = sortedStats.map(([weather, count]) => `
+              <div class="weather-stat-card">
+                <div class="weather-stat-count">${count}</div>
+                <div class="weather-stat-label">${weather}</div>
+              </div>
+            `).join('');
+            weatherDiv.appendChild(statsDiv);
+            
+            const maxPoints = currentHours <= 3 ? 24 : 48;
+            const sampledWeather = sampleData(list, maxPoints);
+            
+            sampledWeather.forEach(item => {
               const d = new Date(parseInt(item.time));
-              return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+              const timeStr = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+              const weather = formatWeather(item.value);
+              
+              const timelineItem = document.createElement('div');
+              timelineItem.className = 'weather-timeline-item';
+              timelineItem.innerHTML = `
+                <span class="weather-time">${timeStr}</span>
+                <span class="weather-text-display">${weather}</span>
+                <span class="weather-original">原始: ${item.value}</span>
+              `;
+              weatherDiv.appendChild(timelineItem);
             });
             
-            const weatherValues = list.map((item, index) => {
-              return {
-                value: index,
-                weather: formatWeather(item.value),
-                time: times[index]
-              };
-            });
-
-            const option = {
-              tooltip: {
-                trigger: 'item',
-                formatter: function(params) {
-                  return `${params.data.time}<br/>天气: ${params.data.weather}`;
-                }
-              },
-              grid: { left: '3%', right: '5%', bottom: '10%', top: '15%', containLabel: true },
-              xAxis: {
-                type: 'category',
-                data: times,
-                axisLabel: { 
-                  rotate: 45, 
-                  fontSize: 9,
-                  interval: Math.floor(times.length / 10)
-                }
-              },
-              yAxis: {
-                type: 'value',
-                show: false,
-                min: 0,
-                max: 10
-              },
-              series: [{
-                name: '天气状况',
-                type: 'scatter',
-                data: weatherValues,
-                symbolSize: 14,
-                itemStyle: { 
-                  color: color,
-                  shadowBlur: 8,
-                  shadowColor: color + '40'
-                },
-                label: {
-                  show: true,
-                  formatter: function(params) {
-                    return params.data.weather;
-                  },
-                  position: 'top',
-                  fontSize: 11,
-                  color: '#1e293b',
-                  fontWeight: 600,
-                  distance: 8
-                },
-                emphasis: {
-                  scale: 1.5,
-                  label: {
-                    fontSize: 14,
-                    fontWeight: 'bold'
-                  }
-                }
-              }]
-            };
-            
-            chartInstance.setOption(option, true);
           } else {
-            const times = list.map(item => {
+            chartDiv.style.display = 'block';
+            chartInstance = echarts.init(chartDiv);
+            
+            const maxPoints = currentHours <= 3 ? 60 : currentHours <= 6 ? 72 : 48;
+            const sampledList = sampleData(list, maxPoints);
+            
+            const times = sampledList.map(item => {
               const d = new Date(parseInt(item.time));
-              return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+              return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
             });
             
-            const values = list.map(item => {
+            const values = sampledList.map(item => {
               const v = item.value;
               return isNaN(parseFloat(v)) ? v : parseFloat(v);
             });
 
+            const avgValue = (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1);
+            const maxValue = Math.max(...values).toFixed(1);
+            const minValue = Math.min(...values).toFixed(1);
+
+            const gradientColors = identifier.includes('Temp') 
+              ? ['rgba(249,115,22,0.4)', 'rgba(249,115,22,0.02)']
+              : ['rgba(59,130,246,0.4)', 'rgba(59,130,246,0.02)'];
+
             const option = {
+              title: {
+                text: `平均: ${avgValue}${unit}  最高: ${maxValue}${unit}  最低: ${minValue}${unit}`,
+                left: 'center',
+                top: 0,
+                textStyle: { fontSize: 11, fontWeight: 500, color: '#64748b' }
+              },
               tooltip: { 
                 trigger: 'axis',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#e2e8f0',
+                textStyle: { fontSize: 12, color: '#1e293b' },
                 formatter: function(params) {
                   const p = params[0];
-                  return `${p.axisValue}<br/>${p.seriesName}: ${p.value} ${unit}`;
+                  return `${p.axisValue}<br/>${p.marker} ${p.seriesName}: <strong>${p.value} ${unit}</strong>`;
                 }
               },
-              grid: { left: '8%', right: '5%', bottom: '10%', top: '5%', containLabel: true },
+              grid: { left: '5%', right: '5%', bottom: '5%', top: '15%', containLabel: true },
               xAxis: {
                 type: 'category',
                 data: times,
+                boundaryGap: false,
+                axisLine: { lineStyle: { color: '#e2e8f0' } },
+                axisTick: { show: false },
                 axisLabel: { 
-                  rotate: 45, 
-                  fontSize: 9,
-                  interval: Math.floor(times.length / 8)
+                  fontSize: 10,
+                  color: '#94a3b8',
+                  interval: Math.max(1, Math.floor(times.length / 8))
                 }
               },
               yAxis: {
                 type: 'value',
                 name: unit,
-                nameTextStyle: { fontSize: 11 },
+                nameTextStyle: { fontSize: 10, color: '#94a3b8' },
                 axisLabel: {
-                  formatter: function(value) {
-                    return value.toFixed(1);
-                  }
-                }
-              },
-              dataZoom: [
-                {
-                  type: 'inside',
-                  start: 0,
-                  end: 100
+                  fontSize: 10,
+                  color: '#94a3b8',
+                  formatter: function(v) { return v.toFixed(1); }
                 },
-                {
-                  type: 'slider',
-                  start: 0,
-                  end: 100,
-                  height: 20,
-                  bottom: 5
-                }
-              ],
+                splitLine: { lineStyle: { color: '#f8fafc', type: 'dashed' } }
+              },
               series: [{
                 name: name,
                 type: 'line',
                 data: values,
                 smooth: true,
-                symbol: 'circle',
-                symbolSize: 3,
+                symbol: 'none',
                 lineStyle: { color: color, width: 2 },
                 areaStyle: {
                   color: new echarts.graphic.LinearGradient(0,0,0,1,[
-                    {offset:0, color: color + '40'},
-                    {offset:1, color: color + '05'}
+                    {offset:0, color: gradientColors[0]},
+                    {offset:1, color: gradientColors[1]}
                   ])
                 },
                 markLine: {
                   silent: true,
-                  data: [
-                    { type: 'average', name: '平均值' }
-                  ],
-                  lineStyle: { color: '#94a3b8', type: 'dashed' }
+                  symbol: 'none',
+                  data: [{ yAxis: parseFloat(avgValue), name: '平均' }],
+                  lineStyle: { color: '#cbd5e1', type: 'dashed', width: 1 }
                 }
               }]
             };
@@ -745,15 +897,8 @@
             chartInstance.setOption(option, true);
           }
           
-          chartInstance.hideLoading();
-          
-          setTimeout(() => {
-            if (chartInstance) chartInstance.resize();
-          }, 100);
-          
         } catch (e) {
           console.error('加载历史数据失败:', e);
-          chartInstance.hideLoading();
           alert('加载历史数据失败，请检查网络连接');
         }
       }
@@ -791,6 +936,22 @@
         });
       }
 
+      function bindTimeRangeButtons() {
+        document.querySelectorAll('.time-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const hours = parseInt(this.dataset.hours);
+            if (hours === currentHours) return;
+            
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            if (currentIdentifier) {
+              loadHistory(currentIdentifier, currentName, currentUnit, currentColor, currentDataType, hours);
+            }
+          });
+        });
+      }
+
       function setupModal() {
         const modal = document.getElementById('historyModal');
         
@@ -800,6 +961,8 @@
             chartInstance.dispose();
             chartInstance = null;
           }
+          document.getElementById('weatherTimeline').innerHTML = '';
+          currentIdentifier = null;
         });
         
         modal.addEventListener('click', (e) => {
@@ -809,6 +972,8 @@
               chartInstance.dispose();
               chartInstance = null;
             }
+            document.getElementById('weatherTimeline').innerHTML = '';
+            currentIdentifier = null;
           }
         });
         
@@ -822,6 +987,7 @@
         fetchProperties();
         bindThresholdButtons();
         bindCardClicks();
+        bindTimeRangeButtons();
         setupModal();
 
         setInterval(() => {
